@@ -1,0 +1,84 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity", "interactiveTransactions"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Users{
+  id              Int             @id @default(autoincrement())
+  firstName       String
+  lastName        String
+  email           String @unique
+  password        String
+  quizzes         Quizzes[]
+  quizAttempt     QuizAttempts[]
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime?       @updatedAt
+}
+
+model Quizzes{
+  id              Int         @id @default(autoincrement())
+  title           String
+  createdById     Int
+  user            Users       @relation(fields: [createdById], references: [id])
+  questions       Questions[]
+  quizAttempts    QuizAttempts[]
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime?   @updatedAt
+}
+
+model Questions{
+  id                  Int         @id @default(autoincrement())
+  title               String
+  quizId              Int
+  quiz                Quizzes?    @relation(fields: [quizId], references: [id])
+  answers             Answers[]
+  quizAttemptAnswers  QuizAttemptAnswers[]
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime?   @updatedAt
+}
+
+model Answers{
+  id              Int         @id @default(autoincrement())
+  title           String
+  isCorrect       Boolean     @default(false)
+  score           Decimal
+  questionId      Int
+  question        Questions   @relation(fields: [questionId], references: [id])
+  quizAttemptAnswers QuizAttemptAnswers[]
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime?   @updatedAt
+}
+
+model QuizAttempts{
+  id                  Int         @id @default(autoincrement())
+  userId              Int
+  user                Users       @relation(fields: [userId], references: [id])
+  quizId              Int
+  quiz                Quizzes     @relation(fields: [quizId], references: [id])
+  quizAttemptAnswers  QuizAttemptAnswers[]
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime?   @updatedAt
+
+  @@unique([userId, quizId], name: "attempted_user_quiz")
+}
+
+model QuizAttemptAnswers{
+  id                Int           @id @default(autoincrement())
+  quizAttemptsId    Int
+  quizAttempts      QuizAttempts  @relation(fields: [quizAttemptsId], references: [id])
+  questionId        Int
+  question          Questions     @relation(fields: [questionId], references: [id])
+  answerId          Int
+  answer            Answers       @relation(fields: [answerId], references: [id])
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime?     @updatedAt
+}
+
