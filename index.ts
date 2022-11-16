@@ -1,5 +1,5 @@
 import express from 'express'
-import { register, login, isEmailExist, createQuiz, getUserQuizzes, getQuizById, createQuizAttempt, getQuizAttempted} from './mainController'
+import { register, login, isEmailExist, createQuiz, getUserQuizzes, getQuizById, createQuizAttempt, getQuizAttempted} from './src/mainController'
 const app = express()
 app.use(express.json())
 
