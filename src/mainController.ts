@@ -72,6 +72,7 @@ export async function createQuiz(req: Request, res: Response) {
         const data = Object.assign(req.body);
         if(data){
             const newQuiz = await create(data);
+            console.log("newQuiz==========", newQuiz);
             return res.send({
                 status: true,
                 data: newQuiz

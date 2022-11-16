@@ -85,10 +85,7 @@ export async function create({
                     data: newQuiz
                 }
             });
-
-        console.log("newQuizResponse===============", newQuizResponse)
         if (newQuizResponse.status) {
-            console.log("here=============")
             sendEmail(newQuizResponse.data?.id);
         }
         return {

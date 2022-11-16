@@ -6,14 +6,12 @@ export async function sendEmail(
 ) {
     try {
         if (quizid) {
-            console.log("here=============1")
             const body = process.env.BASEURL;
             const userEmails = await prismaClient.users.findMany({
                 select: {
                     email: true
                 }
             });
-            console.log("userEmails======", userEmails);
             userEmails.forEach( async email => {
                 let msg: any = {
                     to: email.email,
