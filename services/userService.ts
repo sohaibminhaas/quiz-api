@@ -1,4 +1,4 @@
-import { prisma, Users } from '@prisma/client';
+import { Prisma, prisma, Users } from '@prisma/client';
 import prismaClient from '../src/prisma';
 import { passwordToHash } from '../helpers/helper';
 import { sendEmail } from '../helpers/send-email';
@@ -147,12 +147,9 @@ export async function createAttempt({
     }
 }
 
-export async function getQuizzesByUserId(userId: number) {
+export async function getQuizzesByUserId() {
     try {
-        const user = prismaClient.quizzes.findMany({
-            where: {
-                createdById: userId
-            },
+        const quizzes = await prismaClient.quizzes.findMany({
             select: {
                 title: true,
                 id: true,
@@ -168,9 +165,12 @@ export async function getQuizzesByUserId(userId: number) {
                         }
                     }
                 }
+            },
+            orderBy: {
+                id: Prisma.SortOrder.desc
             }
         });
-        return user;
+        return quizzes;
     } catch (error) {
         return undefined;
     }

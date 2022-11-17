@@ -93,9 +93,7 @@ export async function createQuiz(req: Request, res: Response) {
 
 export async function getUserQuizzes(req: Request, res: Response) {
     try {
-        const data = Object.assign(req.query);
-        if(data){
-            const quizzesList = await getQuizzesByUserId(parseInt(data.userId));
+            const quizzesList = await getQuizzesByUserId();
             if(!quizzesList){
                 return res.send({
                     status: false,
@@ -106,7 +104,6 @@ export async function getUserQuizzes(req: Request, res: Response) {
                 status: true,
                 data: quizzesList
             });
-        }
         res.send({
             status: false,
             data: undefined
